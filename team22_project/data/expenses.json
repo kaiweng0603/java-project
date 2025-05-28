@@ -1,0 +1,29 @@
+[ {
+  "amount" : 250.0,
+  "year" : 2025,
+  "month" : 5,
+  "date" : 29,
+  "categories" : "FOOD",
+  "note" : "午餐便當"
+}, {
+  "amount" : 123.0,
+  "year" : 2025,
+  "month" : 5,
+  "date" : 29,
+  "categories" : "FOOD",
+  "note" : "晚餐"
+}, {
+  "amount" : 1000.0,
+  "year" : 2025,
+  "month" : 5,
+  "date" : 29,
+  "categories" : "BOOKS",
+  "note" : "微積分教科書"
+}, {
+  "amount" : 75.5,
+  "year" : 2025,
+  "month" : 5,
+  "date" : 29,
+  "categories" : "FOOD",
+  "note" : "八方"
+} ]
