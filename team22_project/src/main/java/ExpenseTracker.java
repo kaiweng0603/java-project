@@ -63,6 +63,15 @@ class RecordManager {
         return expenses.stream().max(Comparator.comparingDouble(Expense::getAmount));
     }
 
+    public List<Expense> getExpensesBetween(LocalDate start, LocalDate end) {
+        return expenses.stream()
+                .filter(e -> {
+                    LocalDate date = LocalDate.of(e.getYear(), e.getMonth(), e.getDate());
+                    return !date.isBefore(start) && !date.isAfter(end);
+                })
+                .collect(Collectors.toList());
+    }
+
     public static boolean isValidAmount(String input) {
         return Pattern.matches("^[0-9]+(\\.[0-9]+)?$", input);
     }

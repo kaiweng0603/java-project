@@ -8,7 +8,7 @@ import java.util.Optional;
 public class AccountBookGUI extends JFrame {
     private JTextField amountField, dateField, noteField;
     private JComboBox<ExpenseCategories> categoryBox;
-    private JButton addButton, statsButton;
+    private JButton addButton, statsButton, searchButton;
     private JTextArea outputArea;
     private RecordManager manager;
 
@@ -22,7 +22,7 @@ public class AccountBookGUI extends JFrame {
 
         setLayout(new BorderLayout());
 
-        JPanel inputPanel = new JPanel(new GridLayout(5, 2));
+        JPanel inputPanel = new JPanel(new GridLayout(6, 3));
         inputPanel.add(new JLabel("金額:"));
         amountField = new JTextField();
         inputPanel.add(amountField);
@@ -41,8 +41,11 @@ public class AccountBookGUI extends JFrame {
 
         addButton = new JButton("新增支出");
         statsButton = new JButton("統計總覽");
+        searchButton = new JButton("查帳");
+
         inputPanel.add(addButton);
         inputPanel.add(statsButton);
+        inputPanel.add(searchButton);  // 新增查帳按鈕
 
         add(inputPanel, BorderLayout.NORTH);
 
@@ -52,9 +55,10 @@ public class AccountBookGUI extends JFrame {
 
         addButton.addActionListener(e -> addExpense());
         statsButton.addActionListener(e -> showStats());
+        searchButton.addActionListener(e -> searchExpenses()); // 綁定查帳方法
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 400);
+        setSize(600, 450);
         setVisible(true);
     }
 
@@ -93,6 +97,33 @@ public class AccountBookGUI extends JFrame {
         sb.append(String.format("本月(%d-%02d)總支出: %.2f\n", now.getYear(), now.getMonthValue(), total));
         Optional<Expense> max = manager.getMaxExpense();
         max.ifPresent(e -> sb.append(String.format("最大支出: %.2f 元 (%s)\n", e.getAmount(), e.getNote())));
+        outputArea.setText(sb.toString());
+    }
+
+    private void searchExpenses() {
+        String startDateStr = JOptionPane.showInputDialog(this, "請輸入查詢起始日期 (yyyy-MM-dd):");
+        String endDateStr = JOptionPane.showInputDialog(this, "請輸入查詢結束日期 (yyyy-MM-dd):");
+
+        if (!RecordManager.isValidDate(startDateStr) || !RecordManager.isValidDate(endDateStr)) {
+            showError("日期格式錯誤，請使用 yyyy-MM-dd 格式。");
+            return;
+        }
+
+        LocalDate start = LocalDate.parse(startDateStr);
+        LocalDate end = LocalDate.parse(endDateStr);
+
+        var expenses = manager.getExpensesBetween(start, end);
+        if (expenses.isEmpty()) {
+            outputArea.setText("在該區間內沒有任何支出紀錄。");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder("查詢結果：\n");
+        for (Expense e : expenses) {
+            sb.append(String.format("日期: %d-%02d-%02d, 金額: %.2f, 類別: %s, 備註: %s\n",
+                    e.getYear(), e.getMonth(), e.getDate(),
+                    e.getAmount(), e.getCategories(), e.getNote()));
+        }
         outputArea.setText(sb.toString());
     }
 
