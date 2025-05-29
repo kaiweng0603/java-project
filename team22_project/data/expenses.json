@@ -1,41 +1,33 @@
 [ {
-  "amount" : 250.0,
+  "amount" : 206.64319770642678,
   "year" : 2025,
   "month" : 5,
   "date" : 29,
-  "note" : "午餐便當",
-  "categories" : "FOOD",
-  "dateString" : "2025-05-29"
+  "note" : "地鐵",
+  "dateString" : "2025-05-29",
+  "categories" : "TRANSPORTATION"
 }, {
-  "amount" : 123.0,
+  "amount" : 500.0,
   "year" : 2025,
-  "month" : 5,
-  "date" : 29,
+  "month" : 6,
+  "date" : 1,
   "note" : "晚餐",
-  "categories" : "FOOD",
-  "dateString" : "2025-05-29"
+  "dateString" : "2025-06-01",
+  "categories" : "FOOD"
 }, {
-  "amount" : 1000.0,
+  "amount" : 1033.22,
   "year" : 2025,
-  "month" : 5,
-  "date" : 29,
-  "note" : "微積分教科書",
-  "categories" : "BOOKS",
-  "dateString" : "2025-05-29"
+  "month" : 6,
+  "date" : 1,
+  "note" : "晚餐",
+  "dateString" : "2025-06-01",
+  "categories" : "FOOD"
 }, {
-  "amount" : 75.5,
+  "amount" : 206.64,
   "year" : 2025,
-  "month" : 5,
-  "date" : 29,
-  "note" : "八方",
-  "categories" : "FOOD",
-  "dateString" : "2025-05-29"
-}, {
-  "amount" : 75.5,
-  "year" : 2025,
-  "month" : 5,
-  "date" : 29,
-  "note" : "八方",
-  "categories" : "FOOD",
-  "dateString" : "2025-05-29"
+  "month" : 6,
+  "date" : 1,
+  "note" : "晚餐",
+  "dateString" : "2025-06-01",
+  "categories" : "FOOD"
 } ]
