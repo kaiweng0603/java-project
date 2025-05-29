@@ -1,3 +1,5 @@
+package ntou.cs.java2025;
+
 import java.io.*;
 import java.nio.file.*;
 import java.time.LocalDate;
@@ -7,26 +9,6 @@ import java.util.regex.*;
 import java.util.stream.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-
-abstract class Record {
-    double amount;
-    int year, month, date;
-    String categories;
-    String note;
-
-    public double getAmount() { return amount; }
-    public int getYear() { return year; }
-    public int getMonth() { return month; }
-    public int getDate() { return date; }
-    public String getCategories() { return categories; }
-    public String getNote() { return note; }
-    public String getDateString() {
-        return String.format("%04d-%02d-%02d", year, month, date);
-    }
-}
-
-class Expense extends Record {}
-class Income extends Record {}
 
 class RecordManager {
     private List<Expense> expenses;
@@ -44,15 +26,15 @@ class RecordManager {
 
     public List<Expense> findExpensesByDate(int year, int month, int day) {
         return expenses.stream()
-            .filter(e -> e.getYear() == year && e.getMonth() == month && e.getDate() == day)
-            .collect(Collectors.toList());
+                .filter(e -> e.getYear() == year && e.getMonth() == month && e.getDate() == day)
+                .collect(Collectors.toList());
     }
 
     public double getMonthlyExpenseTotal(int year, int month) {
         return expenses.stream()
-            .filter(e -> e.getYear() == year && e.getMonth() == month)
-            .mapToDouble(Expense::getAmount)
-            .sum();
+                .filter(e -> e.getYear() == year && e.getMonth() == month)
+                .mapToDouble(Expense::getAmount)
+                .sum();
     }
 
     public Optional<Expense> getMaxExpense() {
@@ -70,7 +52,7 @@ class RecordManager {
 
 public class ExpenseTracker {
     public static void main(String[] args) throws IOException {
-        RecordManager manager = new RecordManager("expenses.json", "incomes.json");
+        RecordManager manager = new RecordManager("data/expenses.json", "data/incomes.json");
 
         // 驗證範例
         System.out.println("金額驗證: " + RecordManager.isValidAmount("123.45"));
@@ -84,8 +66,7 @@ public class ExpenseTracker {
         System.out.println("5 月總支出: " + mayTotal);
 
         manager.getMaxExpense().ifPresent(e ->
-            System.out.println("最大支出: " + e.getAmount() + ", 項目: " + e.getNote())
+                System.out.println("最大支出: " + e.getAmount() + ", 項目: " + e.getNote())
         );
     }
 }
-

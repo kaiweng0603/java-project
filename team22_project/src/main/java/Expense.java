@@ -1,47 +1,17 @@
 package ntou.cs.java2025;
 
-public class Expense {
+public class Expense extends Record {
 
-    private double amount;
-    private int year;
-    private int month;
-    private int date;
     private ExpenseCategories categories;
-    private String note;
 
     public Expense(double amount, int year, int month, int date, ExpenseCategories categories, String note) {
-        this.amount = amount;
-        this.year = year;
-        this.month = month;
-        this.date = date;
+        super(amount, year, month, date, note);
         this.categories = categories;
-        this.note = note;
     }
 
-    public Expense() {
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public int getDate() {
-        return date;
-    }
+    public Expense(){}
 
     public ExpenseCategories getCategories() {
         return categories;
-    }
-
-    public String getNote() {
-        return note;
     }
 }
