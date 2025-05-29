@@ -1,12 +1,13 @@
 package ntou.cs.java2025;
 
-abstract class Record {
+public class Record {
 
     private double amount;
     private int year;
     private int month;
     private int date;
     private String note;
+    private String dateString;
 
     public Record(double amount, int year, int month, int date, String note) {
         this.amount = amount;
@@ -14,6 +15,7 @@ abstract class Record {
         this.month = month;
         this.date = date;
         this.note = note;
+        dateString = String.format("%04d-%02d-%02d", year, month, date);
     }
 
     public Record(){}
@@ -39,6 +41,6 @@ abstract class Record {
     }
 
     public String getDateString() {
-        return String.format("%04d-%02d-%02d", year, month, date);
+        return dateString;
     }
 }

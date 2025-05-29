@@ -7,14 +7,15 @@ public class TestExpensesManager {
 
         // 建立一筆支出資料
         Expense expense = new Expense(
-                75.5,                        // 金額
-                2025, 5, 29,               // 年月日
+                1000,                        // 金額
+                2025, 6, 1,               // 年月日
                 ExpenseCategories.FOOD,    // 分類
-                "八方"                  // 備註
+                "晚餐"                  // 備註
         );
 
         // 寫入 JSON 檔案
-        manager.addTransaction(expense);
+        manager.addForeignTransaction(expense, "jpy");
+
     }
 }
 
