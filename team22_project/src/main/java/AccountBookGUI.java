@@ -2,14 +2,12 @@ package ntou.cs.java2025;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
 public class AccountBookGUI extends JFrame {
     private JTextField amountField, dateField, noteField;
-    private JComboBox<String> categoryBox;
+    private JComboBox<ExpenseCategories> categoryBox;
     private JButton addButton, statsButton;
     private JTextArea outputArea;
     private RecordManager manager;
@@ -18,13 +16,12 @@ public class AccountBookGUI extends JFrame {
         super("記帳工具");
         try {
             manager = new RecordManager("expenses.json", "incomes.json");
-        } catch (IOException e) {
+        } catch (Exception e) {
             showError("無法載入資料: " + e.getMessage());
         }
 
         setLayout(new BorderLayout());
 
-        // 輸入面板
         JPanel inputPanel = new JPanel(new GridLayout(5, 2));
         inputPanel.add(new JLabel("金額:"));
         amountField = new JTextField();
@@ -35,7 +32,7 @@ public class AccountBookGUI extends JFrame {
         inputPanel.add(dateField);
 
         inputPanel.add(new JLabel("類別:"));
-        categoryBox = new JComboBox<>(new String[]{"FOOD", "TRANSPORTATION", "ENTERTAINMENT", "BILLS", "RENT", "BEAUTY", "CLOTHING", "MEDICAL", "BOOKS", "STATIONERY", "DAILY_SUPPLIES", "OTHERS"});
+        categoryBox = new JComboBox<>(ExpenseCategories.values());
         inputPanel.add(categoryBox);
 
         inputPanel.add(new JLabel("備註:"));
@@ -49,12 +46,10 @@ public class AccountBookGUI extends JFrame {
 
         add(inputPanel, BorderLayout.NORTH);
 
-        // 輸出面板
         outputArea = new JTextArea();
         outputArea.setEditable(false);
         add(new JScrollPane(outputArea), BorderLayout.CENTER);
 
-        // 事件監聽器
         addButton.addActionListener(e -> addExpense());
         statsButton.addActionListener(e -> showStats());
 
@@ -66,7 +61,7 @@ public class AccountBookGUI extends JFrame {
     private void addExpense() {
         String amountStr = amountField.getText().trim();
         String dateStr = dateField.getText().trim();
-        String category = (String) categoryBox.getSelectedItem();
+        ExpenseCategories category = (ExpenseCategories) categoryBox.getSelectedItem();
         String note = noteField.getText().trim();
 
         if (!RecordManager.isValidAmount(amountStr)) {
@@ -87,7 +82,7 @@ public class AccountBookGUI extends JFrame {
                 category,
                 note
         );
-        manager.addExpense(expense, "expenses.json");
+        manager.addExpense(expense);
         showMessage("新增成功！");
     }
 

@@ -13,15 +13,37 @@ import com.google.gson.reflect.TypeToken;
 class RecordManager {
     private List<Expense> expenses;
     private List<Income> incomes;
+    private String expensePath;
+    private String incomePath;
 
     public RecordManager(String expensePath, String incomePath) throws IOException {
-        this.expenses = loadRecords(expensePath, new TypeToken<List<Expense>>(){}.getType());
-        this.incomes = loadRecords(incomePath, new TypeToken<List<Income>>(){}.getType());
+        this.expensePath = expensePath;
+        this.incomePath = incomePath;
+        this.expenses = loadRecords(expensePath, new TypeToken<List<Expense>>() {}.getType());
+        this.incomes = loadRecords(incomePath, new TypeToken<List<Income>>() {}.getType());
     }
 
     private <T> List<T> loadRecords(String path, java.lang.reflect.Type type) throws IOException {
-        String json = Files.readString(Paths.get(path));
+        File file = new File(path);
+        if (!file.exists()) {
+            file.createNewFile();
+            Files.writeString(file.toPath(), "[]");
+        }
+        String json = Files.readString(file.toPath());
         return new Gson().fromJson(json, type);
+    }
+
+    private <T> void saveRecords(List<T> records, String path) {
+        try (Writer writer = new FileWriter(path)) {
+            new GsonBuilder().setPrettyPrinting().create().toJson(records, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addExpense(Expense expense) {
+        expenses.add(expense);
+        saveRecords(expenses, expensePath);
     }
 
     public List<Expense> findExpensesByDate(int year, int month, int day) {
@@ -49,7 +71,6 @@ class RecordManager {
         return Pattern.matches("^\\d{4}-\\d{2}-\\d{2}$", input);
     }
 }
-
 public class ExpenseTracker {
     public static void main(String[] args) throws IOException {
         RecordManager manager = new RecordManager("data/expenses.json", "data/incomes.json");
