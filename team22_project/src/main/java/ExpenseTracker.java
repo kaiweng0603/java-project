@@ -40,6 +40,15 @@ class RecordManager {
             e.printStackTrace();
         }
     }
+    public List<Income> getIncomesBetween(LocalDate start, LocalDate end) {
+        return incomes.stream()
+                .filter(i -> {
+                    LocalDate date = LocalDate.of(i.getYear(), i.getMonth(), i.getDate());
+                    return !date.isBefore(start) && !date.isAfter(end);
+                })
+                .collect(Collectors.toList());
+    }
+
 
     public void addExpense(Expense expense) {
         expenses.add(expense);
@@ -71,6 +80,18 @@ class RecordManager {
                 })
                 .collect(Collectors.toList());
     }
+    public double getMonthlyIncomeTotal(int year, int month) {
+        return incomes.stream()
+                .filter(i -> i.getYear() == year && i.getMonth() == month)
+                .mapToDouble(Income::getAmount)
+                .sum();
+    }
+    public void addIncome(Income income) {
+        incomes.add(income);
+        saveRecords(incomes, incomePath);
+    }
+
+
 
     public static boolean isValidAmount(String input) {
         return Pattern.matches("^[0-9]+(\\.[0-9]+)?$", input);

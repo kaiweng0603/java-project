@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "categories": "SALARY",
+    "amount": 2000.0,
+    "year": 2025,
+    "month": 5,
+    "date": 30,
+    "note": "",
+    "dateString": "2025-05-30"
+  }
+]
