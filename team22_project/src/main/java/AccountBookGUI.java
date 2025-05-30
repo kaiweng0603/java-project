@@ -8,37 +8,6 @@ import java.awt.event.FocusEvent;
 import java.time.LocalDate;
 import java.util.Optional;
 
-// 貨幣枚舉
-enum Currency {
-    TWD("新台幣", "NT$", 1.0),
-    USD("美元", "$", 30.5),
-    EUR("歐元", "€", 33.2),
-    JPY("日圓", "¥", 0.21),
-    KRW("韓圓", "₩", 0.023),
-    CNY("人民幣", "¥", 4.3),
-    HKD("港幣", "HK$", 3.9),
-    GBP("英鎊", "£", 38.5);
-
-    private final String name;
-    private final String symbol;
-    private final double exchangeRate;
-
-    Currency(String name, String symbol, double exchangeRate) {
-        this.name = name;
-        this.symbol = symbol;
-        this.exchangeRate = exchangeRate;
-    }
-
-    public String getName() { return name; }
-    public String getSymbol() { return symbol; }
-    public double getExchangeRate() { return exchangeRate; }
-
-    @Override
-    public String toString() {
-        return name + " (" + symbol + ")";
-    }
-}
-
 public class AccountBookGUI extends JFrame {
     // 簡化的顏色主題 - 使用系統默認色彩
     private static final Color PRIMARY_COLOR = new Color(70, 130, 180);  // 鋼藍色
@@ -59,7 +28,7 @@ public class AccountBookGUI extends JFrame {
         super("記帳工具");
 
         try {
-            manager = new RecordManager("expenses.json", "incomes.json");
+            manager = new RecordManager("data/expenses.json", "data/incomes.json");
         } catch (Exception e) {
             showError("無法載入資料: " + e.getMessage());
         }
@@ -288,11 +257,10 @@ public class AccountBookGUI extends JFrame {
 
             double amount = Double.parseDouble(amountStr);
             Currency selectedCurrency = (Currency) currencyBox.getSelectedItem();
-            double twdAmount = amount * selectedCurrency.getExchangeRate();
+            double twdAmount = ConvertCurrency.convertCurrency(amount, selectedCurrency);
 
             if (selectedCurrency != Currency.TWD) {
-                convertedAmountLabel.setText(String.format("NT$ %.2f (匯率: %.3f)",
-                        twdAmount, selectedCurrency.getExchangeRate()));
+                convertedAmountLabel.setText(String.format("NT$ %.2f (匯率: %.3f)", twdAmount, ConvertCurrency.getExchangeRate(selectedCurrency)));
             } else {
                 convertedAmountLabel.setText(String.format("NT$ %.2f", twdAmount));
             }
@@ -326,21 +294,20 @@ public class AccountBookGUI extends JFrame {
 
         LocalDate date = LocalDate.parse(dateStr);
         double originalAmount = Double.parseDouble(amountStr);
-        double twdAmount = originalAmount * currency.getExchangeRate();
+        double twdAmount = ConvertCurrency.convertCurrency(originalAmount, currency);
 
         String fullNote = note;
         if (currency != Currency.TWD) {
-            fullNote = String.format("%s (原幣: %s %.2f)",
-                    note, currency.getSymbol(), originalAmount);
+            fullNote = String.format("%s (原幣: %s %.2f%s)", note, currency.getName(), originalAmount, currency.getSymbol());
         }
 
         Expense expense = new Expense(
-                twdAmount,
-                date.getYear(),
-                date.getMonthValue(),
-                date.getDayOfMonth(),
-                category,
-                fullNote
+            twdAmount,
+            date.getYear(),
+            date.getMonthValue(),
+            date.getDayOfMonth(),
+            category,
+            fullNote
         );
 
         manager.addExpense(expense);
@@ -366,12 +333,11 @@ public class AccountBookGUI extends JFrame {
 
         LocalDate date = LocalDate.parse(dateStr);
         double originalAmount = Double.parseDouble(amountStr);
-        double twdAmount = originalAmount * currency.getExchangeRate();
+        double twdAmount = ConvertCurrency.convertCurrency(originalAmount, currency);
 
         String fullNote = note;
         if (currency != Currency.TWD) {
-            fullNote = String.format("%s (原幣: %s %.2f)",
-                    note, currency.getSymbol(), originalAmount);
+            fullNote = String.format("%s (原幣: %s %.2f%s)", note, currency.getName(), originalAmount, currency.getSymbol());
         }
 
         Income income = new Income(
@@ -428,7 +394,7 @@ public class AccountBookGUI extends JFrame {
         for (Currency curr : Currency.values()) {
             if (curr != Currency.TWD) {
                 sb.append(String.format("%s: 1 %s = NT$ %.3f\n",
-                        curr.getName(), curr.getSymbol(), curr.getExchangeRate()));
+                        curr.getName(), curr.getSymbol(), ConvertCurrency.getExchangeRate(curr)));
             }
         }
 
